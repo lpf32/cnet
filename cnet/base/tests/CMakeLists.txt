@@ -1,0 +1,3 @@
+add_executable(date_unittest Date_unittest.cc)
+target_link_libraries(date_unittest cnet_base)
+add_test(NAME date_unittest COMMAND date_unittest)
