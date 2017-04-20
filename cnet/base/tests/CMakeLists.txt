@@ -7,3 +7,7 @@ add_executable(logstream_test LogStream_test.cc)
 target_link_libraries(logstream_test cnet_base boost_unit_test_framework)
 add_test(NAME logstream_test COMMAND logstream_test)
 endif()
+
+add_executable(timestamp_unittest Timestamp_unittest.cc)
+target_link_libraries(timestamp_unittest cnet_base)
+add_test(NAME timestamp_unittest COMMAND timestamp_unittest)

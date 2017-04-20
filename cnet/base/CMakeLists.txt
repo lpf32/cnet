@@ -4,6 +4,8 @@ set(base_SRCS
         StringPiece.h
         noncopyable.h
         LogStream.cc
+        Timestamp.cc
+        Logging.cc
 )
 
 add_library(cnet_base ${base_SRCS})
