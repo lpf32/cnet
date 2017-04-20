@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#ifdef MUDUO_STD_STRING
+#ifdef CNET_STD_STRING
 #include <string>
 #else
 #include <ext/vstring.h>
