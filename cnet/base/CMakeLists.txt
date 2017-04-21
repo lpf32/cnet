@@ -6,6 +6,7 @@ set(base_SRCS
         LogStream.cc
         Timestamp.cc
         Logging.cc
+        TimeZone.cc
 )
 
 add_library(cnet_base ${base_SRCS})
