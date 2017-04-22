@@ -7,6 +7,8 @@ set(base_SRCS
         Timestamp.cc
         Logging.cc
         TimeZone.cc
+        Thread.cc
+        Exception.cc
 )
 
 add_library(cnet_base ${base_SRCS})
