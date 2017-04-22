@@ -24,7 +24,7 @@ public:
 
     bool valid() const {
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
-        return data_;
+        return static_cast<bool>(data_);
 #else
         return static_cast<bool>(data_);
 #endif
