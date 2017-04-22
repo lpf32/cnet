@@ -15,3 +15,6 @@ add_test(NAME timestamp_unittest COMMAND timestamp_unittest)
 add_executable(timezone_unittest TimeZone_unittest.cc)
 target_link_libraries(timezone_unittest cnet_base)
 add_test(NAME timezone_unittest COMMAND timezone_unittest)
+
+add_executable(atomic_unittest Atomic_unittest.cc)
+add_test(NAME atomic_unittest COMMAND atomic_unittest)
