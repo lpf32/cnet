@@ -36,3 +36,6 @@ target_link_libraries(thread_bench cnet_base)
 
 add_executable(threadlocal_unittest ThreadLocal_test.cc)
 target_link_libraries(threadlocal_unittest cnet_base)
+
+add_executable(threadPool_test ThreadPool_test.cc)
+target_link_libraries(threadPool_test cnet_base)

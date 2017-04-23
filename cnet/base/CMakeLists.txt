@@ -7,6 +7,8 @@ set(base_SRCS
         Thread.cc
         Exception.cc
         Condition.cc
+        ThreadPool.cc
+        CountDownLatch.cc
 )
 
 add_library(cnet_base ${base_SRCS})
