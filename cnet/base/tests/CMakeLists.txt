@@ -39,3 +39,9 @@ target_link_libraries(threadlocal_unittest cnet_base)
 
 add_executable(threadPool_test ThreadPool_test.cc)
 target_link_libraries(threadPool_test cnet_base)
+
+add_executable(mutex_test Mutex_test.cc)
+target_link_libraries(mutex_test cnet_base)
+
+add_executable(fileutil_test FileUtil_test.cc)
+target_link_libraries(fileutil_test cnet_base)

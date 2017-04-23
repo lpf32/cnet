@@ -9,6 +9,7 @@ set(base_SRCS
         Condition.cc
         ThreadPool.cc
         CountDownLatch.cc
+        FileUtil.cc
 )
 
 add_library(cnet_base ${base_SRCS})
