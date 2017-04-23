@@ -29,7 +29,7 @@ __END_DECLS
 
 namespace cnet
 {
-    // Use as data member of a claess
+    // Use as data member of a class
 class MutexLock: public noncopyable
 {
 public:
@@ -88,7 +88,7 @@ private:
 
         ~UnassignGuard()
         {
-            owner_.assertLocked();
+            owner_.assignHolder();
         }
 
     private:
