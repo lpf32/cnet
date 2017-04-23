@@ -30,3 +30,6 @@ add_test(NAME exception_unittest COMMAND exception_unittest)
 add_executable(thread_unittest Thread_test.cc)
 target_link_libraries(thread_unittest cnet_base)
 add_test(NAME thread_unittest COMMAND thread_unittest)
+
+add_executable(thread_bench Thread_bench.cc)
+target_link_libraries(thread_bench cnet_base)
