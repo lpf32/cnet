@@ -5,6 +5,9 @@
 #include <iosfwd>  // for ostream forward-declaration
 
 #include <cnet/base/Types.h>
+#ifndef CNET_STD_STRING
+#include <string>
+#endif
 
 namespace cnet
 {
@@ -18,6 +21,12 @@ public:
     StringArg(const string& str)
             : str_(str.c_str())
     { }
+
+#ifndef CNET_STD_STRING
+    StringArg(const std::string& str)
+        : str_(str.c_str())
+    { }
+#endif
 
     const char *c_str() { return str_; }
 
@@ -47,8 +56,15 @@ public:
     { }
     StringPiece(const string& str)
             : ptr_(str.c_str()),
-              length_(static_cast<int>(strlen(ptr_)))
+              length_(static_cast<int>(str.size()))
     { }
+
+#ifndef CNET_STD_STRING
+    StringPiece(const std::string& str)
+            : ptr_(str.c_str()),
+              length_(static_cast<int>(str.size()))
+    { }
+#endif
     StringPiece(const char* offset, int len)
             : ptr_(offset),
               length_(len)
@@ -102,6 +118,12 @@ public:
     void CopyToString(string *target) const {
         target->assign(ptr_, length_);
     }
+
+#ifndef CNET_STD_STRING
+    void CopyToStdString(std::string *target) const {
+        target->assign(ptr_, length_);
+    }
+#endif
     
     bool starts_with(const StringPiece& x) const {
         return ((length_ > x.length_) 

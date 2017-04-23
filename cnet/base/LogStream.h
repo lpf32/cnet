@@ -9,6 +9,9 @@
 #include <cnet/base/Types.h>
 #include <assert.h>
 #include <string.h> //memcpy
+#ifndef CNET_STD_STRING
+#include <string>
+#endif
 #include <cnet/base/noncopyable.h>
 
 namespace cnet
@@ -132,6 +135,14 @@ public:
         buffer_.append(v.c_str(), v.size());
         return *this;
     }
+
+#ifndef CNET_STD_STRING
+    self &operator<<(const std::string &v)
+    {
+        buffer_.append(v.c_str(), v.size());
+        return *this;
+    }
+#endif
     self& operator<<(const StringPiece& v)
     {
         buffer_.append(v.c_str(), static_cast<size_t>(v.size()));
