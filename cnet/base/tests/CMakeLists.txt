@@ -33,3 +33,6 @@ add_test(NAME thread_unittest COMMAND thread_unittest)
 
 add_executable(thread_bench Thread_bench.cc)
 target_link_libraries(thread_bench cnet_base)
+
+add_executable(threadlocal_unittest ThreadLocal_test.cc)
+target_link_libraries(threadlocal_unittest cnet_base)
