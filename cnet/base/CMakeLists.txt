@@ -10,6 +10,8 @@ set(base_SRCS
         ThreadPool.cc
         CountDownLatch.cc
         FileUtil.cc
+        ProcessInfo.cc
+        LogFile.cc
 )
 
 add_library(cnet_base ${base_SRCS})
