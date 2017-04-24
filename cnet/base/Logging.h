@@ -101,7 +101,7 @@ inline Logger::LogLevel Logger::logLevel()
 #define LOG_DEBUG if (cnet::Logger::logLevel() <= cnet::Logger::DEBUG) \
     cnet::Logger(__FILE__, __LINE__, cnet::Logger::DEBUG, __func__).stream()
 #define LOG_INFO if (cnet::Logger::logLevel() <= cnet::Logger::INFO) \
-    cnet::Logger(__FILE__, __LINE__, cnet::Logger::INFO, __func__).stream()
+    cnet::Logger(__FILE__, __LINE__, cnet::Logger::INFO).stream()
 
 #define LOG_WARN cnet::Logger(__FILE__, __LINE__, cnet::Logger::WARN).stream()
 #define LOG_ERROR cnet::Logger(__FILE__, __LINE__, cnet::Logger::ERROR).stream()
