@@ -49,3 +49,5 @@ target_link_libraries(fileutil_test cnet_base)
 add_executable(processinfo_test ProcessInfo_test.cc)
 target_link_libraries(processinfo_test cnet_base)
 
+add_executable(threadLocalsingleton_test ThreadLocalSingleton_test.cc)
+target_link_libraries(threadLocalsingleton_test cnet_base)
