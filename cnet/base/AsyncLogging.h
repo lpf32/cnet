@@ -49,8 +49,8 @@ public:
 
 private:
 
-    /*AsyncLogging(const AsyncLogging&);
-    void operator=(const AsyncLogging&);*/
+    AsyncLogging(const AsyncLogging&); //ptr_container
+    void operator=(const AsyncLogging&); //ptr_container
 
     void threadFunc();
 

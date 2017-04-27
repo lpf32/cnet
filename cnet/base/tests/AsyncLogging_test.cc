@@ -7,7 +7,7 @@
 
 using namespace cnet;
 
-int KRollSize = 500*1000*1000;
+int kRollSize = 500*1000*1000;
 
 cnet::AsyncLogging* g_asyncLog = NULL;
 
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     {
         size_t kOneGB = 1000*1024*1024;
         struct rlimit rl = {2*kOneGB, 2*kOneGB};
-        setrlimit(RLiMIT_AS, &rl);
+        setrlimit(RLIMIT_AS, &rl);
     }
 
     printf("pid = %d\n", getpid());
