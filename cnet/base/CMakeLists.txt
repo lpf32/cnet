@@ -12,6 +12,7 @@ set(base_SRCS
         FileUtil.cc
         ProcessInfo.cc
         LogFile.cc
+        AsyncLogging.cc
 )
 
 add_library(cnet_base ${base_SRCS})

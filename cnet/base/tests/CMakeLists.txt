@@ -57,3 +57,9 @@ target_link_libraries(logging_test cnet_base)
 
 add_executable(logfile_test LogFile_test.cc)
 target_link_libraries(logfile_test cnet_base)
+
+add_executable(blockingqueue_test BlockingQueue_test.cc)
+target_link_libraries(blockingqueue_test cnet_base)
+
+add_executable(blockingqueue_bench BlockingQueue_bench.cc)
+target_link_libraries(blockingqueue_bench cnet_base)
