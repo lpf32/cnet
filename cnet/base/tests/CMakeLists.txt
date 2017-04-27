@@ -73,3 +73,13 @@ target_link_libraries(singleton_test cnet_base)
 
 add_executable(asynclogging_test AsyncLogging_test.cc)
 target_link_libraries(asynclogging_test cnet_base)
+
+if(ZLIB_FOUND)
+add_executable(gzipfile_test GzipFile_test.cc)
+target_link_libraries(gzipfile_test cnet_base_cpp11 z)
+set_target_properties(gzipfile_test PROPERTIES COMPILE_FLAGS "-std=c++0x")
+add_test(NAME gzipfile_test COMMAND gzipfile_test)
+endif()
+
+add_executable(fork_test Fork_test.cc)
+target_link_libraries(fork_test cnet_base)
