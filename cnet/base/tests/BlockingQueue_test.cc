@@ -75,12 +75,29 @@ private:
     boost::ptr_vector<cnet::Thread> threads_;
 };
 
-int main()
+void testMove() {
+#ifdef __GXX_EXPERIMENTAL_CXX0X__
+#if __GNUC_PREREQ(4,4)
+    cnet::BlockingQueue<std::unique_ptr<int>> queue;
+    queue.put(std::unique_ptr<int>(new int(42)));
+    std::unique_ptr<int> x= queue.take();
+    printf("took %d, size %zd\n", *x, queue.size());
+    *x = 123;
+    queue.put(std::move(x));
+    std::unique_ptr<int> y = queue.take();
+    printf("took %d, size %zd\n", *y, queue.size());
+#endif
+#endif
+}
+
+    int main()
 {
     printf("pid = %d, tid = %d\n", ::getpid(), cnet::CurrentThread::tid());
     Test t(5);
     t.run(100);
     t.joinAll();
+
+    testMove();
 
     printf("number of created threads %d\n", cnet::Thread::numCreated());
 }

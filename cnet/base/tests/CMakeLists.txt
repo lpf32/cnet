@@ -60,9 +60,16 @@ target_link_libraries(logfile_test cnet_base)
 
 add_executable(blockingqueue_test BlockingQueue_test.cc)
 target_link_libraries(blockingqueue_test cnet_base)
+set_target_properties(blockingqueue_test PROPERTIES COMPILE_FLAGS "-std=c++0x")
 
 add_executable(blockingqueue_bench BlockingQueue_bench.cc)
 target_link_libraries(blockingqueue_bench cnet_base)
 
 add_executable(boundedblockingqueue_test BoundedBlockingQueue_test.cc)
 target_link_libraries(boundedblockingqueue_test cnet_base)
+
+add_executable(singleton_test Singleton_test.cc)
+target_link_libraries(singleton_test cnet_base)
+
+add_executable(asynclogging_test AsyncLogging_test.cc)
+target_link_libraries(asynclogging_test cnet_base)
