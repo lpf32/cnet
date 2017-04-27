@@ -22,6 +22,7 @@ public:
         NUM_LOG_LEVELS,
     };
 
+    // source file of log
     class SourceFile
     {
     public:
