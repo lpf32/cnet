@@ -63,3 +63,6 @@ target_link_libraries(blockingqueue_test cnet_base)
 
 add_executable(blockingqueue_bench BlockingQueue_bench.cc)
 target_link_libraries(blockingqueue_bench cnet_base)
+
+add_executable(boundedblockingqueue_test BoundedBlockingQueue_test.cc)
+target_link_libraries(boundedblockingqueue_test cnet_base)

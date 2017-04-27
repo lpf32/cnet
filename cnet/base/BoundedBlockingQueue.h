@@ -16,8 +16,8 @@ class BoundedBlockingQueue : public noncopyable
 public:
     explicit BoundedBlockingQueue(int maxSize)
         : mutex_(),
-          nonEmpty_(mutex_),
-          nonFull_(mutex_),
+          notEmpty_(mutex_),
+          notFull_(mutex_),
           queue_(maxSize)
     {}
 
@@ -29,7 +29,7 @@ public:
             notFull_.wait();
         }
         assert(!queue_.full());
-        queue_.push_front(x);
+        queue_.push_back(x);
         notEmpty_.notify();
     }
 
@@ -42,6 +42,7 @@ public:
         }
         assert(!queue_.empty());
         T front(queue_.front());
+        queue_.pop_front();
         notFull_.notify();
         return front;
     }
@@ -56,6 +57,12 @@ public:
     {
         MutexLockGuard lock(mutex_);
         return queue_.full();
+    }
+
+    size_t size() const
+    {
+        MutexLockGuard lock(mutex_);
+        return queue_.size();
     }
 
     size_t capacity() const
