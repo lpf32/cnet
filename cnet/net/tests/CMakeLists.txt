@@ -1,0 +1,6 @@
+if (BOOSTTEST_LIBRARY)
+    add_executable(buffer_unittest Buffer_unittest.cc)
+    target_link_libraries(buffer_unittest cnet_net boost_unit_test_framework)
+    add_test(NAME buffer_unittest COMMAND buffer_unittest)
+    set_target_properties(buffer_unittest PROPERTIES COMPILE_FLAGS "-std=c++0x")
+endif ()
