@@ -12,6 +12,10 @@ set(net_SRCS
     EventLoop.cc
     TimerQueue.cc
     SocketsOps.cc
+    Poller.cc
+    poller/DefaultPoller.cc
+    poller/PollPoller.cc
+    poller/EPollPoller.cc
 )
 
 add_library(cnet_net ${net_SRCS})
