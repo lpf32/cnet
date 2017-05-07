@@ -16,6 +16,8 @@ set(net_SRCS
     poller/DefaultPoller.cc
     poller/PollPoller.cc
     poller/EPollPoller.cc
+    EventLoopThread.cc
+    EventLoopThreadPoll.cc
 )
 
 add_library(cnet_net ${net_SRCS})
