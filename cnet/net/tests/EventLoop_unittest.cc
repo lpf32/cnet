@@ -31,6 +31,13 @@ void threadFunc()
 int main()
 {
     printf("main(): pid = %d, tid = %d\n", getpid(), CurrentThread::tid());
+
+    {
+        EventLoop loop;
+        loop.quit();
+        loop.loop();
+    }
+
     assert(EventLoop::getEventLoopOfCurrentThread() == NULL);
     EventLoop loop;
     assert(EventLoop::getEventLoopOfCurrentThread() == &loop);

@@ -32,6 +32,12 @@ class EventLoop : public noncopyable
 {
 public:
     typedef boost::function<void()> Functor;
+    enum LoopState
+    {
+        CREATED,
+        RUNNING,
+        QUITED
+    };
 
     EventLoop();
     ~EventLoop();
@@ -157,7 +163,7 @@ private:
     typedef std::vector<Channel*> ChannelList;
 
     bool looping_; /* atomic */
-    bool quit_; /* atomic and shared between threads, okay on x86, I guess*/
+    LoopState quit_; /* atomic and shared between threads, okay on x86, I guess*/
     bool eventHanding_; /* atomic */
     bool callingPendingFunctors_; /* atomic */
     int64_t iteration_;

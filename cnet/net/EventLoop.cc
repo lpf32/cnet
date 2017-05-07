@@ -51,7 +51,7 @@ EventLoop* EventLoop::getEventLoopOfCurrentThread()
 
 EventLoop::EventLoop()
     : looping_(false),
-      quit_(false),
+      quit_(EventLoop::CREATED),
       eventHanding_(false),
       iteration_(0),
       threadId_(CurrentThread::tid()),
@@ -92,10 +92,11 @@ void EventLoop::loop()
     assert(!looping_);
     assertInLoopThread();
     looping_ = true;
-    quit_ = false; // FIXME: what if someone calls quit() before loop()?
+    if (quit_ == EventLoop::CREATED)
+        quit_ = EventLoop::RUNNING; // FIXME: what if someone calls quit() before loop()?
     LOG_TRACE << "EventLoop " << this << " start looping";
 
-    while (!quit_)
+    while (quit_ == EventLoop::RUNNING)
     {
         activeChannels_.clear();
         pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_);
@@ -123,7 +124,7 @@ void EventLoop::loop()
 
 void EventLoop::quit()
 {
-    quit_ = true;
+    quit_ = EventLoop::QUITED;
     // There is a chance that loop() just executes while(!quit_) and exits,
     // then EventLoop destructs, then we are accessing an invalid object.
     // Can be fixed using mutex_ in both place.
