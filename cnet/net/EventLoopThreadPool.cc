@@ -1,4 +1,4 @@
-#include <cnet/net/EventLoopThreadPoll.h>
+#include <cnet/net/EventLoopThreadPool.h>
 
 #include <cnet/net/EventLoop.h>
 #include <cnet/net/EventLoopThread.h>
@@ -9,7 +9,7 @@
 using namespace cnet;
 using namespace cnet::net;
 
-EventLoopThreadPoll::EventLoopThreadPoll(EventLoop *baseLoop, const string &nameArg)
+EventLoopThreadPool::EventLoopThreadPool(EventLoop *baseLoop, const string &nameArg)
     : baseLoop_(baseLoop),
       name_(nameArg),
       started_(false),
@@ -17,11 +17,11 @@ EventLoopThreadPoll::EventLoopThreadPoll(EventLoop *baseLoop, const string &name
       next_(0)
 { }
 
-EventLoopThreadPoll::~EventLoopThreadPoll()
+EventLoopThreadPool::~EventLoopThreadPool()
 {
 }
 
-void EventLoopThreadPoll::start(const ThreadInitCallback &cb)
+void EventLoopThreadPool::start(const ThreadInitCallback &cb)
 {
     assert(!started_);
     baseLoop_->assertInLoopThread();
@@ -43,7 +43,7 @@ void EventLoopThreadPoll::start(const ThreadInitCallback &cb)
     }
 }
 
-EventLoop* EventLoopThreadPoll::getNextLoop()
+EventLoop* EventLoopThreadPool::getNextLoop()
 {
     baseLoop_->assertInLoopThread();
     assert(started_);
@@ -62,7 +62,7 @@ EventLoop* EventLoopThreadPoll::getNextLoop()
     return loop;
 }
 
-EventLoop* EventLoopThreadPoll::getLoopForHash(size_t hashCode)
+EventLoop* EventLoopThreadPool::getLoopForHash(size_t hashCode)
 {
     baseLoop_->assertInLoopThread();
     EventLoop* loop = baseLoop_;
@@ -74,7 +74,7 @@ EventLoop* EventLoopThreadPoll::getLoopForHash(size_t hashCode)
     return loop;
 }
 
-std::vector<EventLoop*> EventLoopThreadPoll::getAllLoops()
+std::vector<EventLoop*> EventLoopThreadPool::getAllLoops()
 {
     baseLoop_->assertInLoopThread();
     assert(started_);

@@ -16,13 +16,13 @@ namespace net
 class EventLoop;
 class EventLoopThread;
 
-class EventLoopThreadPoll: public noncopyable
+class EventLoopThreadPool: public noncopyable
 {
 public:
     typedef boost::function<void(EventLoop*)> ThreadInitCallback;
 
-    EventLoopThreadPoll(EventLoop* baseLoop, const string& nameArg);
-    ~EventLoopThreadPoll();
+    EventLoopThreadPool(EventLoop* baseLoop, const string& nameArg);
+    ~EventLoopThreadPool();
     void setThreadNum(int numThreads) { numThreads_ = numThreads; }
     void start(const ThreadInitCallback& cb = ThreadInitCallback());
 
