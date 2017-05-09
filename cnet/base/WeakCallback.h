@@ -47,7 +47,7 @@ template <typename CLASS>
 class WeakCallback {
 public:
     WeakCallback(const boost::weak_ptr<CLASS> &object,
-                 const std::function<void (CLASS *)> &function)
+                 const boost::function<void (CLASS *)> &function)
             : object_(object),
               function_(function)
     { }
@@ -61,7 +61,7 @@ public:
 
 private:
     boost::weak_ptr<CLASS> object_;
-    std::function<void (CLASS*)> function_;
+    boost::function<void (CLASS*)> function_;
 };
 
 template<typename CLASS>
