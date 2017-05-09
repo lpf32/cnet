@@ -24,3 +24,9 @@ target_link_libraries(eventLoopthread_unittest cnet_net)
 
 add_executable(eventLoopthreadpool_unittest EventLoopThreadPool_unittest.cc)
 target_link_libraries(eventLoopthreadpool_unittest cnet_net)
+
+add_executable(echoclient_unittest EchoClient_unittest.cc)
+target_link_libraries(echoclient_unittest cnet_net)
+
+add_executable(echoserver_unittest EchoServer_unittest.cc)
+target_link_libraries(echoserver_unittest cnet_net)

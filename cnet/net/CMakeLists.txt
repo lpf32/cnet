@@ -17,7 +17,14 @@ set(net_SRCS
     poller/PollPoller.cc
     poller/EPollPoller.cc
     EventLoopThread.cc
-    EventLoopThreadPoll.cc
+        EventLoopThreadPool.cc
+    InetAddress.cc
+    Socket.cc
+    TcpConnection.cc
+    Acceptor.cc
+    TcpClient.cc
+    TcpServer.cc
+    Connector.cc
 )
 
 add_library(cnet_net ${net_SRCS})

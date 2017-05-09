@@ -114,6 +114,6 @@ else()
 endif()
 
 add_executable(main main.cpp)
-target_link_libraries(main cnet_base)
+target_link_libraries(main cnet_net)
 set_target_properties(main PROPERTIES COMPILE_FLAGS "-std=c++0x")
 

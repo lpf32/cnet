@@ -1,4 +1,4 @@
-#include <cnet/net/EventLoopThreadPoll.h>
+#include <cnet/net/EventLoopThreadPool.h>
 #include <cnet/net/EventLoop.h>
 #include <cnet/base/Thread.h>
 
@@ -30,7 +30,7 @@ int main()
 
     {
         printf("Single thread %p:\n", &loop);
-        EventLoopThreadPoll model(&loop, "single");
+        EventLoopThreadPool model(&loop, "single");
         model.setThreadNum(0);
         model.start(init);
         assert(model.getNextLoop() == &loop);
@@ -40,7 +40,7 @@ int main()
 
     {
         printf("Another thread:\n");
-        EventLoopThreadPoll model(&loop, "another");
+        EventLoopThreadPool model(&loop, "another");
         model.setThreadNum(1);
         model.start(init);
         EventLoop *nextLoop = model.getNextLoop();
@@ -52,7 +52,7 @@ int main()
 
     {
         printf("three thread:\n");
-        EventLoopThreadPoll model(&loop, "three");
+        EventLoopThreadPool model(&loop, "three");
         model.setThreadNum(3);
         model.start(init);
         EventLoop *nextLoop = model.getNextLoop();

@@ -44,6 +44,4 @@ int main()
         loop->runInLoop(boost::bind(quit, loop));
         CurrentThread::sleepUsec(500*1000);
     }
-
-    // FIXME test dtor before thread start return
 }
