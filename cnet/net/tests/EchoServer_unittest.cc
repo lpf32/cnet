@@ -46,7 +46,7 @@ private:
     void onMessage(const TcpConnectionPtr& conn, Buffer *buf, Timestamp time)
     {
         string msg(buf->retrieveAllAsString());
-        LOG_TRACE << conn->name() << " recv " << msg.size() << " bytes at " << time.toString();
+        LOG_INFO << conn->name() << " recv " << msg.size() << " bytes at " << time.toString();
 
         if (msg == "exit\n")
         {

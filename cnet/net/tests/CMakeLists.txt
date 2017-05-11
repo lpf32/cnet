@@ -30,3 +30,12 @@ target_link_libraries(echoclient_unittest cnet_net)
 
 add_executable(echoserver_unittest EchoServer_unittest.cc)
 target_link_libraries(echoserver_unittest cnet_net)
+
+add_executable(TcpClient_reg1 TcpClient_reg1.cc)
+target_link_libraries(TcpClient_reg1 cnet_net)
+
+add_executable(TcpClient_reg2 TcpClient_reg2.cc)
+target_link_libraries(TcpClient_reg2 cnet_net)
+
+add_executable(TcpClient_reg3 TcpClient_reg3.cc)
+target_link_libraries(TcpClient_reg3 cnet_net)
