@@ -61,7 +61,7 @@ TcpConnection::TcpConnection(EventLoop *loop,
 
 TcpConnection::~TcpConnection()
 {
-    LOG_DEBUG << "TcpConnection::ctor[" << name_ << "] at " << this
+    LOG_DEBUG << "TcpConnection::dtor[" << name_ << "] at " << this
               << " fd= " << channel_->fd() << " state=" << stateToString();
     assert(state_ == kDisconnected);
 }
