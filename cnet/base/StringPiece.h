@@ -138,7 +138,7 @@ private:
 
 inline bool operator==(const StringPiece &lhs, const StringPiece &rhs) {
     return ((lhs.length_ == rhs.length_) &&
-            (memcmp(lhs.ptr_, rhs.ptr_, static_cast<size_t>(lhs.length_))));
+            (memcmp(lhs.ptr_, rhs.ptr_, static_cast<size_t>(lhs.length_)) == 0));
 }
 inline bool operator!=(const StringPiece &lhs, const StringPiece &rhs) {
     return !(lhs == rhs);
