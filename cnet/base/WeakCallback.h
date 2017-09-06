@@ -17,10 +17,10 @@ public:
               function_(function)
     { }
 
-    void operator()(ARGS &&... args) const {
+    void operator()(ARGS&&... args) const {
         boost::shared_ptr<CLASS> ptr(object_.lock());
         if (ptr) {
-            function_(ptr.get(), std::forward(ARGS)(args)...);
+            function_(ptr.get(), std::forward<ARGS>(args)...);
         }
     }
 

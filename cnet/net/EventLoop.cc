@@ -213,7 +213,7 @@ TimerId EventLoop::runAt(const Timestamp &time, TimerCallback &&cb)
     return timerQueue_->addTiemr(std::move(cb), time, 0.0);
 }
 
-TimerId EventLoop::runAfter(double delay, TimerCallback &&cb
+TimerId EventLoop::runAfter(double delay, TimerCallback &&cb)
 {
     Timestamp time(addTime(Timestamp::now(), delay));
     return runAt(time, std::move(cb));
