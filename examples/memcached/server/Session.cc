@@ -44,7 +44,7 @@ bool Session::SpaceSeparator::operator()(InputIterator &next, InputIterator end,
 
 struct Session::Reader
 {
-    Reader(Tokenizer::iterator& beg, Tokenizer::iterator end)
+    Reader(Tokenizer::iterator& beg, Tokenizer::iterator& end)
         : first_(beg),
           last_(end)
     {
@@ -138,7 +138,7 @@ void Session::resetRequest()
     bytesToDiscard_ = 0;
 }
 
-bool Session::doUpdate(Tokenizer::iterator &beg, Tokenizer::iterator end)
+bool Session::doUpdate(Tokenizer::iterator &beg, Tokenizer::iterator&& end)
 {
     if (command_ == "set")
         policy_ = Item::kSet;
@@ -374,7 +374,7 @@ void Session::discardValue(Buffer *buf)
     }
 }
 
-void Session::doDelete(Tokenizer::iterator &beg, Tokenizer::iterator end)
+void Session::doDelete(Tokenizer::iterator &beg, Tokenizer::iterator&& end)
 {
     assert(command_ == "delete");
     assert(beg != end);

@@ -83,8 +83,8 @@ private:
             const char*,
             StringPiece> Tokenizer;
     struct Reader;
-    bool doUpdate(Tokenizer::iterator& beg, Tokenizer::iterator end);
-    void doDelete(Tokenizer::iterator& beg, Tokenizer::iterator end);
+    bool doUpdate(Tokenizer::iterator& beg, Tokenizer::iterator&& end);
+    void doDelete(Tokenizer::iterator& beg, Tokenizer::iterator&& end);
 
     MemcacheServer* owner_;
     cnet::net::TcpConnectionPtr conn_;

@@ -1,6 +1,7 @@
 if(BOOSTPO_LIBRARY)
     add_executable(memcached_debug Item.cc MemcacheServer.cc Session.cc server.cc)
-    target_link_libraries(memcached_debug cnet_net boost_program_options)
+    target_link_libraries(memcached_debug cnet_net_cpp11 boost_program_options)
+    set_target_properties(memcached_debug PROPERTIES COMPILE_FLAGS "-std=c++0x")
 endif()
 
 add_executable(memcached_footprint Item.cc MemcacheServer.cc Session.cc footprint_test.cc)
