@@ -1,3 +1,6 @@
+add_subdirectory(memcached/server)
+
+
 if(GD_INCLUDE_DIR AND GD_LIBRARY)
     add_subdirectory(procmon)
 else()
