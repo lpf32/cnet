@@ -61,7 +61,7 @@ private:
     {
         bool operator()(const ConstItemPtr& x, const ConstItemPtr& y) const
         {
-            return x->hash() == y->hash();
+            return x->key() == y->key();
         }
     };
 
