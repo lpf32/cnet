@@ -5,7 +5,8 @@ if(BOOSTPO_LIBRARY)
 endif()
 
 add_executable(memcached_footprint Item.cc MemcacheServer.cc Session.cc footprint_test.cc)
-target_link_libraries(memcached_footprint cnet_net )
+target_link_libraries(memcached_footprint cnet_net_cpp11 cnet_inspect)
+set_target_properties(memcached_footprint PROPERTIES COMPILE_FLAGS "-std=c++0x")
 
 if(TCMALLOC_INCLUDE_DIR AND TCMALLOC_LIBRARY)
     set_target_properties(memcached_footprint PROPERTIES COMPILE_FLAGS "-DHAVE_TCMALLOC")
