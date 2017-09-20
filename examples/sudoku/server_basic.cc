@@ -20,6 +20,7 @@ public:
         : loop_(loop),
           server_(loop, addr, name)
     {
+        server_.setConnectionCallback(boost::bind(&SudokuServer::onConnection, this, _1));
         server_.setMessageCallback(boost::bind(&SudokuServer::onMessage, this, _1, _2, _3));
     }
 
@@ -30,7 +31,7 @@ public:
 
     void onConnection(const TcpConnectionPtr& conn)
     {
-        LOG_TRACE << conn->peerAddress().toIpPort() << " -> "
+        LOG_INFO << conn->peerAddress().toIpPort() << " -> "
                   << conn->localAddress().toIpPort() << " is "
                   << (conn->connected() ? "UP" : "DONW");
     }
