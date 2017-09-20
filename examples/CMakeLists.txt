@@ -1,5 +1,5 @@
 add_subdirectory(memcached/server)
-
+add_subdirectory(sudoku)
 
 if(GD_INCLUDE_DIR AND GD_LIBRARY)
     add_subdirectory(procmon)
