@@ -97,7 +97,7 @@ public:
     { return &inputBuffer_; }
 
     Buffer* outputBuffer()
-    { return &outpuBuffer_; }
+    { return &outputBuffer_; }
 
     void setCloseCallback(const CloseCallback& cb)
     { closeCallback_ = cb; }
@@ -138,7 +138,7 @@ private:
     CloseCallback closeCallback_;
     size_t highWaterMark_;
     Buffer inputBuffer_;
-    Buffer outpuBuffer_;  // FIXME: use list<Buffer> as output buffer.
+    Buffer outputBuffer_;  // FIXME: use list<Buffer> as output buffer.
     boost::any context_;
 };
 }

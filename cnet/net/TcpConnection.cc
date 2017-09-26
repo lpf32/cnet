@@ -141,7 +141,7 @@ void TcpConnection::sendInLoop(const void *data, size_t len)
         return;
     }
     // if no thing in output queue, try writing directly
-    if (!channel_->isWriting() && outpuBuffer_.readableBytes() == 0)
+    if (!channel_->isWriting() && outputBuffer_.readableBytes() == 0)
     {
         nwrote = sockets::write(channel_->fd(), data, len);
         if (nwrote >= 0)
@@ -169,7 +169,7 @@ void TcpConnection::sendInLoop(const void *data, size_t len)
     assert(remaining <= len);
     if (!faultError && remaining > 0)
     {
-        size_t oldLen = outpuBuffer_.readableBytes();
+        size_t oldLen = outputBuffer_.readableBytes();
         if (oldLen + remaining >= highWaterMark_
                 && oldLen < highWaterMark_
                 && highWaterMarkCallback_)
@@ -177,7 +177,7 @@ void TcpConnection::sendInLoop(const void *data, size_t len)
             loop_->queueInLoop(
                     boost::bind(highWaterMarkCallback_, shared_from_this(), oldLen+remaining));
         }
-        outpuBuffer_.append(static_cast<const char*>(data)+nwrote, remaining);
+        outputBuffer_.append(static_cast<const char*>(data)+nwrote, remaining);
         if (!channel_->isWriting())
         {
             channel_->enableWriting();
@@ -338,12 +338,12 @@ void TcpConnection::handleWrite()
     if (channel_->isWriting())
     {
         ssize_t n = sockets::write(channel_->fd(),
-                                outpuBuffer_.peek(),
-                                outpuBuffer_.readableBytes());
+                                outputBuffer_.peek(),
+                                outputBuffer_.readableBytes());
         if (n > 0)
         {
-            outpuBuffer_.retrieve(n);
-            if (outpuBuffer_.readableBytes() == 0)
+            outputBuffer_.retrieve(n);
+            if (outputBuffer_.readableBytes() == 0)
             {
                 channel_->disableWriting();
                 if (writeCompleteCallback_)
