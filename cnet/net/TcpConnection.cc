@@ -166,7 +166,7 @@ void TcpConnection::sendInLoop(const void *data, size_t len)
         }
     }
 
-    assert(remaining < len);
+    assert(remaining <= len);
     if (!faultError && remaining > 0)
     {
         size_t oldLen = outpuBuffer_.readableBytes();
