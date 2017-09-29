@@ -29,17 +29,20 @@ public:
                  const InetAddress& addr,
                  const string& name,
                  int numEventLoops,
-                 int numThreads)
+                 int numThreads,
+                 bool nodelay)
         : loop_(loop),
           server_(loop, addr, name),
           threadPool_(),
           numThreads_(numThreads),
           startTime_(Timestamp::now()),
+          tcpNoDelay_(nodelay),
           stat_(threadPool_),
           inspectThread_(),
           inspector_(inspectThread_.startLoop(), InetAddress(9982), "sudoku-solver")
     {
         LOG_INFO << "Use " << numEventLoops << " IO threads.";
+        LOG_INFO << "TCP no delay " << nodelay;
 
         server_.setConnectionCallback(boost::bind(&SudokuServer::onConnection, this, _1));
         server_.setMessageCallback(boost::bind(&SudokuServer::onMessage, this, _1, _2, _3));
@@ -63,6 +66,9 @@ public:
         LOG_INFO << conn->peerAddress().toIpPort() << " -> "
                   << conn->localAddress().toIpPort() << " is "
                   << (conn->connected() ? "UP" : "DONW");
+
+        if (conn->connected() && tcpNoDelay_)
+            conn->setTcpNoDelay(true);
     }
 
     void onMessage(const TcpConnectionPtr& conn,
@@ -162,6 +168,7 @@ private:
     ThreadPool threadPool_;
     const int numThreads_;
     const Timestamp startTime_;
+    const bool tcpNoDelay_;
 
     SudokuStat stat_;
     EventLoopThread inspectThread_;
@@ -170,10 +177,12 @@ private:
 
 int main(int argc, char *argv[])
 {
+    LOG_INFO << argv[0] << " [number of IO threads] [number of worker threads] [-n]";
     LOG_INFO << "pid = " << getpid() << ", tid = " << CurrentThread::tid();
 
     int numEventThreads = 0;
     int numThreads = 0;
+    bool nodelay = false;
     if (argc > 1)
     {
         numEventThreads = atoi(argv[1]);
@@ -182,11 +191,15 @@ int main(int argc, char *argv[])
     {
         numThreads = atoi(argv[2]);
     }
+    if (argc > 3 && string(argv[3]) == "-n")
+    {
+        nodelay = true;
+    }
 
 
     EventLoop loop;
     InetAddress addr(9981);
-    SudokuServer server(&loop, addr, "sudoku_hybrid", numEventThreads, numThreads);
+    SudokuServer server(&loop, addr, "sudoku_hybrid", numEventThreads, numThreads, nodelay);
 
     server.start();
     loop.loop();
