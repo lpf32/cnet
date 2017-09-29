@@ -1,2 +1,17 @@
 add_executable(sudoku_solver_basic server_basic.cc sudoku.cc)
 target_link_libraries(sudoku_solver_basic cnet_net)
+
+add_executable(sudoku_client_batch batch.cc sudoku.cc)
+target_link_libraries(sudoku_client_batch cnet_net)
+
+add_executable(sudoku_solver_multiloop server_multiloop.cc sudoku.cc)
+target_link_libraries(sudoku_solver_multiloop cnet_net)
+
+add_executable(sudoku_solver_threadpool server_threadpool.cc sudoku.cc)
+target_link_libraries(sudoku_solver_threadpool cnet_net)
+
+add_executable(sudoku_solver_hybrid server_hybrid.cc sudoku.cc)
+target_link_libraries(sudoku_solver_hybrid cnet_net cnet_inspect)
+
+add_executable(sudoku_loadtest loadtest.cc sudoku.cc)
+target_link_libraries(sudoku_loadtest cnet_net)
