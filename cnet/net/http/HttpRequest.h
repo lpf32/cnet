@@ -8,11 +8,14 @@
 #include <map>
 #include <assert.h>
 #include <stdio.h>
+#include <cnet/base/StringPiece.h>
 
 namespace cnet
 {
 namespace net
 {
+
+class Buffer;
 
 class HttpRequest: public cnet::copyable {
 public:
@@ -93,6 +96,16 @@ public:
         path_.assign(start, end);
     }
 
+    void setPath(const string& path)
+    {
+        path_ = path;
+    }
+
+    void setMethod(const StringPiece& method)
+    {
+        setMethod(method.begin(), method.end());
+    }
+
     const string& path() const
     { return path_; }
 
@@ -151,6 +164,8 @@ public:
         receiveTime_.swap(that.receiveTime_);
         headers_.swap(that.headers_);
     }
+
+    void appendToBuffer(Buffer* output) const;
 
 private:
     Method method_;

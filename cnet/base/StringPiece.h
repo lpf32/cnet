@@ -73,7 +73,7 @@ public:
     const char* c_str() const { return ptr_; }
     int size() const { return length_; }
     bool empty() const { return length_ == 0; }
-    const char* begin() { return ptr_; }
+    const char* begin() const { return ptr_; }
     const char* end() const { return ptr_+length_; }
 
     void clear() { ptr_ = NULL; length_ = 0; }

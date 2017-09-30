@@ -1,7 +1,9 @@
 set(http_SRCS
         HttpContext.cc
+        HttpRequest.cc
         HttpResponse.cc
         HttpServer.cc
+        HttpClient.cc
         )
 
 add_library(cnet_http ${http_SRCS})
