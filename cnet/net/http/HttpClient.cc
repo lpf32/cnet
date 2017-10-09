@@ -3,6 +3,7 @@
 #include <cnet/net/http/HttpRequest.h>
 #include <cnet/net/http/HttpResponse.h>
 #include <cnet/net/http/HttpContext.h>
+#include <cnet/net/EventLoop.h>
 
 #include <cnet/base/Logging.h>
 
@@ -46,6 +47,7 @@ void HttpClient::onMessage(const TcpConnectionPtr &conn, Buffer *buf, Timestamp 
 {
     HttpResponse req(true);
     req.setBody(string(buf->peek(), buf->readableBytes()));
+    buf->retrieveAll();
     httpMessageCallback_(&req);
 }
 
