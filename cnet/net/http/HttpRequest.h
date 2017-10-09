@@ -28,7 +28,7 @@ public:
 
     HttpRequest()
         : method_(kInvalid),
-          version_(kUnknown)
+          version_(kHttp11)
     { }
 
     void setVersion(Version v)
@@ -91,6 +91,24 @@ public:
         return result;
     }
 
+    const char* versionString() const
+    {
+        const char *result = "UNKNOWN";
+        switch (version_)
+        {
+            case kHttp10:
+                result = "HTTP/1.0";
+                break;
+            case kHttp11:
+                result = "HTTP/1.1";
+                break;
+            default:
+                break;
+
+        }
+        return result;
+    }
+
     void setPath(const char* start, const char*end)
     {
         path_.assign(start, end);
@@ -138,6 +156,11 @@ public:
         {
             value.resize(value.size()-1);
         }
+        headers_[field] = value;
+    }
+
+    void addHeader(const string& field, const string& value)
+    {
         headers_[field] = value;
     }
 

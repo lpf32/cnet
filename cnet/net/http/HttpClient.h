@@ -14,41 +14,55 @@ namespace net
 */
 class HttpRequest;
 class HttpResponse;
-class HttpClent : boost::noncopyable
+class HttpClient : boost::noncopyable
 {
 public:
     typedef boost::function<void (HttpRequest *)> HttpConnectionCallback;
     typedef boost::function<void (HttpResponse *)> HttpMessageCallback;
 
-    HttpClent(EventLoop* loop, const InetAddress& serverAddr, const string& name);
+    HttpClient(EventLoop* loop, const InetAddress& serverAddr, const string& name, const string& host);
 
-    ~HttpClent();
+    ~HttpClient();
 
     void setHttpConnectionCallback(const HttpConnectionCallback& cb)
     {
         httpConnectionCallback_ = cb;
     }
 
-    void setHttpMessageCallbackconst (HttpMessageCallback& cb)
+    void setHttpMessageCallback (const HttpMessageCallback& cb)
     {
         httpMessageCallback_ = cb;
     }
 
-    
-private:
     void connect()
     {
         client_.connect();
     }
 
+    void post(const string& url)
+    {
+
+    }
+
+    void get(const string& url)
+    {
+
+    }
+
+    static HttpClient* getHttpClient(EventLoop *loop, const string &host, const string& name);
+    
+private:
+    
     void onConnection(const TcpConnectionPtr& conn);
     void onMessage(const TcpConnectionPtr& conn,
                    Buffer* buf,
                    Timestamp receiveTime);
+    void onResponse(const TcpConnectionPtr&, const HttpResponse&);
+
     TcpClient client_;
+    string host_;
     HttpConnectionCallback httpConnectionCallback_;
     HttpMessageCallback httpMessageCallback_;
-    TcpConnectionPtr conn_;
 };
 }
 }

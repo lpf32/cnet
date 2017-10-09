@@ -49,6 +49,11 @@ public:
 
     void setBody(const string& body)
     { body_ = body; }
+    
+    const string& getBody()
+    {
+        return body_;
+    }
 
     void appendToBuffer(Buffer *output) const;
 
