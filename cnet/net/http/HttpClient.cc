@@ -13,11 +13,11 @@ using namespace cnet;
 using namespace cnet::net;
 
 HttpClient::HttpClient(EventLoop *loop,
-                     const InetAddress &serverAddr,
-                     const string &name,
-                     const string &host)
-    : client_(loop, serverAddr, name),
-      host_(host)
+                       const string &name,
+                       HttpRequest* request)
+    : request_(request),
+      response_(true),
+      client_(loop, request_->getServerAddr(), name)
 {
     client_.setConnectionCallback(boost::bind(&HttpClient::onConnection, this, _1));
     client_.setMessageCallback(boost::bind(&HttpClient::onMessage, this, _1, _2, _3));
@@ -34,17 +34,18 @@ void HttpClient::onConnection(const TcpConnectionPtr &conn)
         LOG_INFO << "Client connected";
         conn->setTcpNoDelay(true);
 
-        HttpRequest req;
-        req.addHeader("host", host_);
-        httpConnectionCallback_(&req);
         Buffer buf;
-        req.appendToBuffer(&buf);
+        request_->appendToBuffer(&buf);
         conn->send(&buf);
     }
 }
 
 void HttpClient::onMessage(const TcpConnectionPtr &conn, Buffer *buf, Timestamp receiveTime)
 {
+    if (request_->httpVersion() == HttpRequest::kHttps)
+    {
+        //TODO https
+    }
     HttpResponse req(true);
     req.setBody(string(buf->peek(), buf->readableBytes()));
     buf->retrieveAll();
@@ -52,21 +53,18 @@ void HttpClient::onMessage(const TcpConnectionPtr &conn, Buffer *buf, Timestamp 
 }
 
 
-HttpClient* HttpClient::getHttpClient(EventLoop *loop, const string &host, const string& name)
+HttpClient* HttpClient::get(EventLoop *loop, const string &url)
 {
-    string::const_iterator colon = std::find(host.begin(), host.end(), ':');
-    uint16_t port = 80;
-    if (string(host.begin(), colon) == "http")
-        port = 80;
-    else if (string(host.begin(), colon) == "https")
-        port = 443;
-    assert(port == 80 || port == 443);
+    HttpRequest *request = HttpRequest::parseURL(url, HttpRequest::kGet);
 
-    InetAddress serverAddr(port);
-    string hostname(colon+3,host.end());
-    assert(InetAddress::resolve(hostname, &serverAddr));
+    HttpClient* client = new HttpClient(loop, "httpclient-get", request);
+    return client;
+}
 
-    LOG_INFO << "connection to " << serverAddr.toIpPort();
-    HttpClient* httpClient =  new HttpClient(loop, serverAddr, name, hostname);
-    return httpClient;
+HttpClient* HttpClient::post(EventLoop *loop, const string &url)
+{
+    HttpRequest *request = HttpRequest::parseURL(url, HttpRequest::kPost);
+
+    HttpClient* client = new HttpClient(loop, "httpclient-post", request);
+    return client;
 }

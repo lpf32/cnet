@@ -5,6 +5,8 @@
 #include <cnet/base/Timestamp.h>
 #include <cnet/base/Types.h>
 
+#include <cnet/net/InetAddress.h>
+
 #include <map>
 #include <assert.h>
 #include <stdio.h>
@@ -17,29 +19,39 @@ namespace net
 
 class Buffer;
 
-class HttpRequest: public cnet::copyable {
+class HttpRequest: public cnet::copyable
+{
 public:
-    enum Method {
+    enum Method
+    {
         kInvalid, kGet, kPost, kHead, kPut, kDelete
     };
-    enum Version {
+    enum Version
+    {
         kUnknown, kHttp10, kHttp11
     };
+    enum HttpVersion
+    {
+        kInvalidHttpVersion, kHttp, kHttps
+    };
 
-    HttpRequest()
-        : method_(kInvalid),
-          version_(kHttp11)
-    { }
+    HttpRequest(Method method = kInvalid,
+                Version version = kHttp11,
+                HttpVersion httpVersion = kInvalidHttpVersion);
 
     void setVersion(Version v)
     {
         version_ = v;
     }
 
-    Version getVersion() const
-    { return version_; }
+    const InetAddress &getServerAddr()
+    {
+        return serverAddr_;
+    }
 
-    bool setMethod(const char* start, const char* end)
+    Version getVersion() const { return version_; }
+
+    bool setMethod(const char *start, const char *end)
     {
         assert(method_ == kInvalid);
         string m(start, end);
@@ -59,12 +71,30 @@ public:
         return method_ != kInvalid;
     }
 
+    void setHttpVersion(const string &version)
+    {
+        if (version == "http")
+            httpVersion_ = kHttp;
+        else if (version == "http")
+            httpVersion_ = kHttps;
+    }
+
+    void setHttpVersion(const HttpVersion& httpVersion)
+    {
+        httpVersion_ = httpVersion;
+    }
+
     Method method() const
     {
         return method_;
     }
 
-    const char* methodString() const
+    const HttpVersion httpVersion() const
+    {
+        return httpVersion_;
+    }
+
+    const char *methodString() const
     {
         const char *result = "UNKNOWN";
         switch (method_)
@@ -91,7 +121,7 @@ public:
         return result;
     }
 
-    const char* versionString() const
+    const char *versionString() const
     {
         const char *result = "UNKNOWN";
         switch (version_)
@@ -109,19 +139,24 @@ public:
         return result;
     }
 
-    void setPath(const char* start, const char*end)
+    void setPath(const char *start, const char *end)
     {
         path_.assign(start, end);
     }
 
-    void setPath(const string& path)
+    void setPath(const string &path)
     {
         path_ = path;
     }
 
-    void setMethod(const StringPiece& method)
+    void setMethod(const StringPiece &method)
     {
         setMethod(method.begin(), method.end());
+    }
+
+    void setMethod(const Method &method)
+    {
+        method_ = method;
     }
 
     const string& path() const
@@ -190,12 +225,16 @@ public:
 
     void appendToBuffer(Buffer* output) const;
 
+    static HttpRequest* parseURL(const StringPiece& url, const Method& method);
+
 private:
     Method method_;
     Version version_;
     string path_;
     string query_;
     Timestamp receiveTime_;
+    HttpVersion httpVersion_;
+    InetAddress serverAddr_;
     std::map<string, string> headers_;
 };
 }

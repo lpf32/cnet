@@ -20,8 +20,7 @@ void onMessage(HttpResponse *httpResponse)
 int main()
 {
     EventLoop loop;
-    HttpClient *client = HttpClient::getHttpClient(&loop, "http://www.baidu.com", "client");
-    client->setHttpConnectionCallback(onConnection);
+    HttpClient *client = HttpClient::get(&loop, "http://www.baidu.com");
     client->setHttpMessageCallback(onMessage);
     client->connect();
     loop.loop();

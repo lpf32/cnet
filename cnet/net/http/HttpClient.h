@@ -4,6 +4,9 @@
 #include <cnet/net/TcpClient.h>
 #include <boost/core/noncopyable.hpp>
 
+#include <cnet/net/http/HttpRequest.h>
+#include <cnet/net/http/HttpResponse.h>
+
 namespace cnet
 {
 namespace net
@@ -20,7 +23,7 @@ public:
     typedef boost::function<void (HttpRequest *)> HttpConnectionCallback;
     typedef boost::function<void (HttpResponse *)> HttpMessageCallback;
 
-    HttpClient(EventLoop* loop, const InetAddress& serverAddr, const string& name, const string& host);
+    HttpClient(EventLoop* loop, const string& name, HttpRequest* request);
 
     ~HttpClient();
 
@@ -39,17 +42,9 @@ public:
         client_.connect();
     }
 
-    void post(const string& url)
-    {
+    static HttpClient* post(EventLoop *loop, const string& url);
 
-    }
-
-    void get(const string& url)
-    {
-
-    }
-
-    static HttpClient* getHttpClient(EventLoop *loop, const string &host, const string& name);
+    static HttpClient* get(EventLoop *loop, const string& url);
     
 private:
     
@@ -59,8 +54,9 @@ private:
                    Timestamp receiveTime);
     void onResponse(const TcpConnectionPtr&, const HttpResponse&);
 
+    HttpRequest *request_;
+    HttpResponse response_;
     TcpClient client_;
-    string host_;
     HttpConnectionCallback httpConnectionCallback_;
     HttpMessageCallback httpMessageCallback_;
 };
