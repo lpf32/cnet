@@ -30,14 +30,43 @@ public:
     {
         kUnknown, kHttp10, kHttp11
     };
-    enum HttpVersion
+    enum Scheme
     {
-        kInvalidHttpVersion, kHttp, kHttps
+        kInvalidScheme, kHttp, kHttps
     };
 
-    HttpRequest(Method method = kInvalid,
-                Version version = kHttp11,
-                HttpVersion httpVersion = kInvalidHttpVersion);
+    struct HttpUri
+    {
+        void setScheme(const string &version)
+        {
+            if (version == "http")
+                scheme_ = kHttp;
+            else if (version == "http")
+                scheme_ = kHttps;
+        }
+
+        void setScheme(const Scheme& scheme)
+        {
+            scheme_ = scheme;
+        }
+
+
+        Scheme scheme() const
+        {
+            return scheme_;
+        }
+
+        int flags_;
+        Scheme scheme_;
+        string userinfo_;
+        string host_;
+        int port_;
+        string path_;
+        string query_;
+        string fragment_;
+    };
+
+    HttpRequest();
 
     void setVersion(Version v)
     {
@@ -71,17 +100,17 @@ public:
         return method_ != kInvalid;
     }
 
-    void setHttpVersion(const string &version)
+    void setScheme(const string &scheme)
     {
-        if (version == "http")
-            httpVersion_ = kHttp;
-        else if (version == "http")
-            httpVersion_ = kHttps;
+        if (scheme == "http")
+            uri_.scheme_ = kHttp;
+        else if (scheme == "http")
+            uri_.scheme_ = kHttps;
     }
 
-    void setHttpVersion(const HttpVersion& httpVersion)
+    void setScheme(const Scheme& scheme)
     {
-        httpVersion_ = httpVersion;
+        uri_.scheme_ = scheme;
     }
 
     Method method() const
@@ -89,9 +118,26 @@ public:
         return method_;
     }
 
-    const HttpVersion httpVersion() const
+    Scheme scheme() const
     {
-        return httpVersion_;
+        return uri_.scheme_;
+    }
+
+    const char* schemeString() const
+    {
+        const char *result = "UNKNOWN";
+        switch (uri_.scheme_)
+        {
+            case kHttp:
+                result = "HTTP";
+                break;
+            case kHttps:
+                result = "HTTPS";
+                break;
+            default:
+                break;
+        }
+        return result;
     }
 
     const char *methodString() const
@@ -141,12 +187,12 @@ public:
 
     void setPath(const char *start, const char *end)
     {
-        path_.assign(start, end);
+        uri_.path_.assign(start, end);
     }
 
     void setPath(const string &path)
     {
-        path_ = path;
+        uri_.path_ = path;
     }
 
     void setMethod(const StringPiece &method)
@@ -160,16 +206,16 @@ public:
     }
 
     const string& path() const
-    { return path_; }
+    { return uri_.path_; }
 
     void setQuery(const char* start, const char* end)
     {
-        query_.assign(start, end);
+        uri_.query_.assign(start, end);
     }
 
     const string& query() const
     {
-        return query_;
+        return uri_.query_;
     }
 
     void setReceiveTime(Timestamp t)
@@ -217,11 +263,12 @@ public:
     {
         std::swap(method_, that.method_);
         std::swap(version_, that.version_);
-        path_.swap(that.path_);
-        query_.swap(that.query_);
+        uri_.path_.swap(that.uri_.path_);
+        uri_.query_.swap(that.uri_.query_);
         receiveTime_.swap(that.receiveTime_);
         headers_.swap(that.headers_);
     }
+
 
     void appendToBuffer(Buffer* output) const;
 
@@ -230,11 +277,9 @@ public:
 private:
     Method method_;
     Version version_;
-    string path_;
-    string query_;
     Timestamp receiveTime_;
-    HttpVersion httpVersion_;
     InetAddress serverAddr_;
+    HttpUri uri_;
     std::map<string, string> headers_;
 };
 }

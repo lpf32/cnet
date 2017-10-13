@@ -9,6 +9,10 @@
 
 #include <boost/bind.hpp>
 
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+#include <openssl/rand.h>
+
 using namespace cnet;
 using namespace cnet::net;
 
@@ -31,7 +35,7 @@ void HttpClient::onConnection(const TcpConnectionPtr &conn)
 {
     if (conn->connected())
     {
-        LOG_INFO << "Client connected";
+        LOG_INFO << "Client connected, Http Version: " << request_->schemeString();
         conn->setTcpNoDelay(true);
 
         Buffer buf;
@@ -42,7 +46,7 @@ void HttpClient::onConnection(const TcpConnectionPtr &conn)
 
 void HttpClient::onMessage(const TcpConnectionPtr &conn, Buffer *buf, Timestamp receiveTime)
 {
-    if (request_->httpVersion() == HttpRequest::kHttps)
+    if (request_->scheme() == HttpRequest::kHttps)
     {
         //TODO https
     }

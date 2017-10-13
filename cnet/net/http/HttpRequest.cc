@@ -2,17 +2,59 @@
 #include <cnet/net/Buffer.h>
 #include <cnet/net/InetAddress.h>
 
+#include <cnet/base/Logging.h>
+
+#include <boost/lexical_cast.hpp>
+
 using namespace cnet;
 using namespace cnet::net;
 
+namespace
+{
+    const char *end_of_authority(const char *s, const char *eos)
+    {
+        while (s != eos)
+        {
+            if (*s == '?' || *s == '#' || *s == '/')
+                return s;
+            ++s;
+        }
+//        return std::find(s, eos, "?");
+        return s;
+    }
 
-HttpRequest:: HttpRequest(Method method,
-                         Version version,
-                         HttpVersion httpVersion)
-        : method_(method),
-          version_(version),
-          httpVersion_(httpVersion),
-          serverAddr_()
+    int parse_port(const char *s, const char *eos)
+    {
+        try
+        {
+            return boost::lexical_cast<int>(s, eos-s);
+        }catch (boost::bad_lexical_cast const&) {
+            LOG_ERROR << "uri port error " << s;
+            return -1;
+        }
+    }
+
+    void parse_authority(HttpRequest::HttpUri &uri, const char *s, const char *eos)
+    {
+        const char* port = std::find(s, eos, ':');
+        if (port == eos)
+        {
+            uri.port_ = -1;
+        }
+        else
+        {
+            uri.port_ = parse_port(port, eos);
+        }
+        uri.host_.assign(s, port);
+    }
+}
+
+
+HttpRequest:: HttpRequest()
+        : method_(kInvalid),
+          version_(kUnknown),
+          serverAddr_(),
+          uri_()
 {
 }
 
@@ -33,58 +75,47 @@ void HttpRequest::appendToBuffer(Buffer *output) const
 
 HttpRequest* HttpRequest::parseURL(const StringPiece &url, const Method& method)
 {
-    HttpRequest* request = new HttpRequest();
+    HttpUri uri;
+    uri.path_ = -1;
+
+//    request->addHeader("Accept", "*");
+//    request->addHeader("Content-length", "0");
+
+    const char *colon = std::find(url.begin(), url.end(), ':');
+
+    uri.setScheme(string(url.begin(), colon));
+
+    assert(StringPiece(colon + 1, 2) == StringPiece("//"));
+
+    const char *authority = colon + 3;
+    const char *path = end_of_authority(authority, url.end());
+    parse_authority(uri, authority, path);
+
+    const char *query = std::find(path, url.end(), '?');
+    const char *fragment = std::find(query, url.end(), '#');
+
+    uri.path_.assign(path, query);
+    uri.query_.assign(query, fragment);
+    uri.fragment_.assign(fragment, url.end());
+
+    if (uri.port_ == -1)
+    {
+        uri.port_ = (uri.scheme_ == kHttp) ? 80 : 443;
+    }
+
+    if (uri.path_ == "")
+    {
+        uri.path_.assign("/");
+    }
+
+    HttpRequest *request = new HttpRequest();
     request->setMethod(method);
+    request->uri_ = uri;
 
-    request->addHeader("Accept", "*");
-    request->addHeader("Content-length", "0");
+    InetAddress addr(static_cast<uint16_t>(uri.port_));
+    assert(InetAddress::resolve(uri.host_, &addr));
+    request->serverAddr_ = addr;
 
-    const char* colon = std::find(url.begin(), url.end(), ':');
-    uint16_t port = 80;
-    string httpVersion(url.begin(), colon);
-
-    if (httpVersion == "http")
-    {
-        port = 80;
-        request->setHttpVersion(HttpRequest::kHttp);
-    }
-    else if (httpVersion == "https")
-    {
-        port = 443;
-        request->setHttpVersion(HttpRequest::kHttps);
-    }
-    assert(port == 80 || port == 443);
-
-
-    StringPiece uri(colon + 3, url.size());
-    colon = std::find(uri.begin(), uri.end(), ':');
-    const char* slant = std::find(uri.begin(), uri.end(), '/');
-    string host;
-
-    if (colon != uri.end())
-    {
-        port = static_cast<uint16_t>(atoi(string(colon+1, slant).c_str()));
-        host.assign(uri.begin(), colon);
-    }
-    else
-    {
-        host.assign(uri.begin(), slant);
-    }
-
-    InetAddress serverAddr(port);
-    assert(InetAddress::resolve(host, &serverAddr));
-    request->serverAddr_ = serverAddr;
-
-    request->addHeader("Host", host);
-
-    if (slant == uri.end())
-    {
-        request->setPath("/");
-    }
-    else
-    {
-        request->setPath(string(slant, uri.end()));
-    }
-
+    request->addHeader("Host", uri.host_);
     return request;
 }
